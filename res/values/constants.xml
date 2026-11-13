@@ -39,7 +39,7 @@
     <bool name="group_mms_pref_default" translatable="false">true</bool>
     <string name="mms_phone_number_pref_key" translatable="false">buglesub_mms_phone_number</string>
 
-    <integer name="mediapicker_transition_duration">600</integer><!-- ms -->
+    <integer name="mediapicker_transition_duration">350</integer><!-- ms -->
     <integer name="compose_transition_duration">300</integer><!-- ms -->
 
     <integer name="snackbar_translation_duration_ms">300</integer>

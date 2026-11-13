@@ -443,7 +443,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         @Override
         public boolean updateActionBar(ActionBar actionBar) {
-            if (isOpen()) {
+            // Only the full-screen picker takes over the action bar. While it is merely
+            // peeking up from the bottom the conversation keeps its own bar, which avoids
+            // the bar sliding away and back every time the picker opens.
+            if (isOpen() && mMediaPicker.isFullScreen()) {
                 mMediaPicker.updateActionBar(actionBar);
                 return true;
             }
