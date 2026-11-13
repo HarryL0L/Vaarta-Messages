@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'Messify'
+
+if (!file('third_party/chips/src').exists()) {
+    throw new GradleException(
+            'The AOSP libraries are missing. Run ./scripts/fetch-deps.sh first.')
+}
+
+// AOSP libraries the app is built against. Their sources live in third_party/
+// (fetched by scripts/fetch-deps.sh); their build files live in gradle/libs/.
+['chips', 'photoviewer', 'colorpicker', 'vcard'].each { name ->
+    include ":$name"
+    project(":$name").projectDir = file("gradle/libs/$name")
+}

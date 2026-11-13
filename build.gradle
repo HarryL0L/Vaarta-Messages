@@ -1,0 +1,105 @@
+// Standalone build of Messify. Inside an Android source tree the app is built
+// with Soong instead; see Android.bp.
+
+plugins {
+    id 'com.android.application' version '8.12.3'
+    id 'com.android.library' version '8.12.3' apply false
+}
+
+// Release signing is configured through environment variables so that no key
+// ever lives in the repository. Without them, release builds are left unsigned.
+def releaseKeystore = System.getenv('MESSIFY_KEYSTORE_FILE')
+
+android {
+    // The package the code and its R class live in. Unchanged from upstream so
+    // that merging LineageOS updates stays painless.
+    namespace = 'com.android.messaging'
+    compileSdk = 36
+    ndkVersion = '27.0.12077973'
+
+    defaultConfig {
+        // The identity of the installed app.
+        applicationId = 'io.github.harryl0l.messify'
+        minSdk = 33
+        targetSdk = 34
+        versionCode = 10001040
+        versionName = '1.0.001'
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_static'
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file('jni/CMakeLists.txt')
+            version = '3.22.1'
+        }
+    }
+
+    signingConfigs {
+        if (releaseKeystore) {
+            release {
+                storeFile = file(releaseKeystore)
+                storePassword = System.getenv('MESSIFY_KEYSTORE_PASSWORD')
+                keyAlias = System.getenv('MESSIFY_KEY_ALIAS')
+                keyPassword = System.getenv('MESSIFY_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            if (releaseKeystore) {
+                signingConfig = signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    lint {
+        // The inherited code base predates most of today's lint checks.
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+}
+
+dependencies {
+    implementation project(':chips')
+    implementation project(':photoviewer')
+    implementation project(':colorpicker')
+    implementation project(':vcard')
+
+    implementation 'androidx.activity:activity:1.10.1'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.collection:collection:1.5.0'
+    implementation 'androidx.core:core:1.16.0'
+    implementation 'androidx.exifinterface:exifinterface:1.4.1'
+    implementation 'androidx.fragment:fragment:1.8.8'
+    implementation 'androidx.media:media:1.7.0'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.viewpager:viewpager:1.1.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.guava:guava:33.4.8-android'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.55'
+}

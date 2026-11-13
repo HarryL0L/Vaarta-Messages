@@ -1,0 +1,36 @@
+// Build file for AOSP's colorpicker library; the sources are in third_party/colorpicker.
+
+plugins {
+    id 'com.android.library'
+}
+
+def src = rootProject.file('third_party/colorpicker')
+
+android {
+    namespace = 'com.android.colorpicker'
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 33
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ["$src/src"]
+            res.srcDirs = ["$src/res"]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError = false
+    }
+}
+
+dependencies {
+}

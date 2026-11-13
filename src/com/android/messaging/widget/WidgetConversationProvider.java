@@ -120,7 +120,7 @@ public class WidgetConversationProvider extends BaseWidgetProvider {
             remoteViews.setRemoteAdapter(appWidgetId, R.id.message_list, intent);
 
             remoteViews.setTextViewText(R.id.widget_label, convData != null ?
-                    convData.getName() : context.getString(R.string.app_name));
+                    convData.getName() : context.getString(R.string.app_brand_name));
 
             // On click intent for Goto Conversation List
             clickIntent = uiIntents.getWidgetPendingIntentForConversationListActivity(context);

@@ -1,0 +1,41 @@
+// Build file for AOSP's photoviewer library; the sources are in third_party/photoviewer.
+
+plugins {
+    id 'com.android.library'
+}
+
+def src = rootProject.file('third_party/photoviewer')
+
+android {
+    namespace = 'com.android.ex.photo'
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 33
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ["$src/src", "$src/activity/src"]
+            res.srcDirs = ["$src/res", "$src/activity/res"]
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError = false
+    }
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'androidx.core:core:1.16.0'
+    implementation 'androidx.fragment:fragment:1.8.8'
+    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
+}

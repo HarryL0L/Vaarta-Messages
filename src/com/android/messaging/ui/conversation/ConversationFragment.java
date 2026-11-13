@@ -1290,7 +1290,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         protected void onExecute() {
             final String appDir = Environment.DIRECTORY_PICTURES
                     + File.separator
-                    + mContext.getResources().getString(R.string.app_name);
+                    + mContext.getResources().getString(R.string.app_brand_name);
             final String downloadDir = Environment.DIRECTORY_DOWNLOADS;
             final ContentResolver resolver = mContext.getContentResolver();
             for (final AttachmentToSave attachment : mAttachmentsToSave) {
@@ -1346,7 +1346,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         messageId = R.plurals.attachments_saved_to_album;
                     }
                 }
-                final String appName = mContext.getResources().getString(R.string.app_name);
+                final String appName = mContext.getResources().getString(R.string.app_brand_name);
                 final int count = imageCount + videoCount + otherCount;
                 message = mContext.getResources().getQuantityString(
                         messageId, count, count, appName);
@@ -1511,7 +1511,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 conversationNameView.setContentDescription(vocalizedConversationName);
                 getActivity().setTitle(conversationName);
             } else {
-                final String appName = getString(R.string.app_name);
+                final String appName = getString(R.string.app_brand_name);
                 conversationNameView.setText(appName);
                 getActivity().setTitle(appName);
             }

@@ -73,7 +73,7 @@ public class BugleWidgetProvider extends BaseWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         remoteViews.setRemoteAdapter(appWidgetId, R.id.conversation_list, intent);
 
-        remoteViews.setTextViewText(R.id.widget_label, context.getString(R.string.app_name));
+        remoteViews.setTextViewText(R.id.widget_label, context.getString(R.string.app_brand_name));
 
         // Open Bugle's app conversation list when click on header
         clickIntent = UIIntents.get().getWidgetPendingIntentForConversationListActivity(context);

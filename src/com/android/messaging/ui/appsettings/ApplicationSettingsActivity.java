@@ -156,7 +156,7 @@ public class ApplicationSettingsActivity extends BugleActionBarActivity {
                 mSmsEnabledPreference.setOnPreferenceClickListener(null);
                 // Fallback since we don't always get our own name
                 if (TextUtils.isEmpty(defaultSmsAppLabel)) {
-                    defaultSmsAppLabel = getString(R.string.app_name);
+                    defaultSmsAppLabel = getString(R.string.app_brand_name);
                 }
             }
             mSmsEnabledPreference.setSummary(defaultSmsAppLabel);

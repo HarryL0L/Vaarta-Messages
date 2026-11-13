@@ -28,8 +28,33 @@ history and in the copyright headers of the source files.
 
 ## Building
 
-The app builds inside an Android source tree (LineageOS or AOSP) with Soong;
-see `Android.bp`. There is no standalone Gradle build yet.
+### Standalone APK (Gradle)
+
+    ./scripts/fetch-deps.sh     # fetches the AOSP libraries into third_party/
+    ./gradlew assembleDebug
+
+The APK is written to `build/outputs/apk/debug/`. You need JDK 17 and the
+Android SDK; Gradle downloads the NDK and CMake it needs for the native GIF
+transcoder. The app installs as `io.github.harryl0l.messify`, so it can live
+next to a system Messaging app.
+
+Every push to `main` is also built by GitHub Actions
+(`.github/workflows/build.yml`); the APK is attached to the workflow run as an
+artifact. Debug APKs built there are signed with a throwaway key that changes
+between runs, so one build cannot be installed over another. To get release
+APKs signed with your own key, add these repository secrets:
+
+| Secret | Value |
+| --- | --- |
+| `MESSIFY_KEYSTORE_BASE64` | your keystore file, base64-encoded |
+| `MESSIFY_KEYSTORE_PASSWORD` | keystore password |
+| `MESSIFY_KEY_ALIAS` | key alias |
+| `MESSIFY_KEY_PASSWORD` | key password |
+
+### Inside an Android source tree (Soong)
+
+`Android.bp` still builds the app as part of a LineageOS or AOSP tree, where
+it keeps the system package name `com.android.messaging`.
 
 ## Licence
 
