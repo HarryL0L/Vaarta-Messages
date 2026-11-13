@@ -63,7 +63,11 @@ jobs:
           VAARTA_KEY_ALIAS: ${{ secrets.VAARTA_KEY_ALIAS }}
           VAARTA_KEY_PASSWORD: ${{ secrets.VAARTA_KEY_PASSWORD }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/vaarta.jks"
+          # Tolerate spaces or line breaks picked up when the secret was pasted.
+          printf '%s' "$KEYSTORE_BASE64" | tr -d '[:space:]' | base64 --decode > "$RUNNER_TEMP/vaarta.jks" \
+            || { echo "::error::VAARTA_KEYSTORE_BASE64 is not valid base64. Re-copy the full output of: base64 -w0 vaarta-release.jks"; exit 1; }
+          keytool -list -keystore "$RUNNER_TEMP/vaarta.jks" -storepass "$VAARTA_KEYSTORE_PASSWORD" -alias "$VAARTA_KEY_ALIAS" > /dev/null \
+            || { echo "::error::The keystore could not be opened. Either VAARTA_KEYSTORE_BASE64 is incomplete, VAARTA_KEYSTORE_PASSWORD is wrong, or VAARTA_KEY_ALIAS does not match."; exit 1; }
           VAARTA_KEYSTORE_FILE="$RUNNER_TEMP/vaarta.jks" ./gradlew assembleRelease --stacktrace
           rm -f "$RUNNER_TEMP/vaarta.jks"
 
