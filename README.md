@@ -2,7 +2,7 @@
 
 An SMS/MMS app for Android with a Material 3 Expressive look: dynamic colour,
 tonal surfaces, grouped message bubbles and a card-style conversation list.
-*Vaarta* (वार्ता) is Hindi for conversation.
+*Vaarta* (वार्ता), from Sanskrit, means conversation in Hindi.
 
 ## Credits
 
