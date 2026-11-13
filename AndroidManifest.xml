@@ -106,6 +106,7 @@
 
         <activity
             android:name=".ui.PermissionCheckActivity"
+            android:theme="@style/BugleTheme.PermissionCheckActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
 

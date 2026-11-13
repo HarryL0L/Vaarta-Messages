@@ -165,8 +165,11 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
 
         final int unspecifiedMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
+        // Outgoing messages have no avatar, so their bubbles sit flush with the edge.
+        final int iconWidthMeasureSpec = mData.getIsIncoming() ? iconMeasureSpec :
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY);
 
-        mContactIconView.measure(iconMeasureSpec, iconMeasureSpec);
+        mContactIconView.measure(iconWidthMeasureSpec, iconMeasureSpec);
 
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
@@ -174,15 +177,16 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
-        final int maxLeftoverSpace = horizontalSpace - mContactIconView.getMeasuredWidth() * 2
+        final int maxLeftoverSpace = horizontalSpace - iconSize * 2
                 - arrowWidth - getPaddingStart() - getPaddingEnd();
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
 
         mMessageBubble.measure(messageContentWidthMeasureSpec, unspecifiedMeasureSpec);
 
-        final int maxHeight = Math.max(mContactIconView.getMeasuredHeight(),
-                mMessageBubble.getMeasuredHeight());
+        final int iconHeight = mContactIconView.getVisibility() == GONE ? 0 :
+                mContactIconView.getMeasuredHeight();
+        final int maxHeight = Math.max(iconHeight, mMessageBubble.getMeasuredHeight());
         setMeasuredDimension(horizontalSpace, maxHeight + getPaddingBottom() + getPaddingTop());
     }
 
@@ -458,7 +462,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mMessageTextAndInfoView.setVisibility(
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
-        if (shouldShowSimplifiedVisualStyle()) {
+        if (shouldShowSimplifiedVisualStyle() || !mData.getIsIncoming()) {
             mContactIconView.setVisibility(View.GONE);
             mContactIconView.setImageResourceUri(null);
         } else {
@@ -690,7 +694,9 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                         isSelected(),
                         incoming,
                         mData.hasIncomingErrorStatus(),
-                        mData.getSenderContactLookupKey());
+                        // The attachments sit directly above the text bubble
+                        true,
+                        mData.getCanClusterWithNextMessage());
                 textMinHeight = messageTextMinHeightDefault;
                 textTopMargin = messageTopPaddingClustered;
                 textTopPadding = textTopPaddingDefault;
@@ -718,7 +724,8 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                     isSelected(),
                     incoming,
                     mData.hasIncomingErrorStatus(),
-                    mData.getSenderContactLookupKey());
+                    mData.getCanClusterWithPreviousMessage(),
+                    mData.getCanClusterWithNextMessage());
             textMinHeight = messageTextMinHeightDefault;
             textTopMargin = 0;
             textTopPadding = textTopPaddingDefault;

@@ -20,5 +20,6 @@
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:background="@drawable/mediapicker_tab_button_background"
+    android:tint="@color/mediapicker_tab_icon_color"
     android:contentDescription="@null">
 </ImageButton>

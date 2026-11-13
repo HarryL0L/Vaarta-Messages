@@ -211,7 +211,6 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
                 false);
         mMediaPickerPanel.setMediaPicker(this);
         mTabStrip = mMediaPickerPanel.findViewById(R.id.mediapicker_tabstrip);
-        mTabStrip.setBackgroundColor(mThemeColor);
         for (final MediaChooser chooser : mChoosers) {
             chooser.onCreateTabButton(inflater, mTabStrip);
             final ImageButton tabButton = chooser.getTabButton();
@@ -292,7 +291,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
     public void setConversationThemeColor(final int themeColor) {
         mThemeColor = themeColor;
         if (mTabStrip != null) {
-            mTabStrip.setBackgroundColor(mThemeColor);
+            // The tab strip keeps its tonal surface colour; see mediapicker_fragment.xml
         }
 
         for (final MediaChooser chooser : mEnabledChoosers) {

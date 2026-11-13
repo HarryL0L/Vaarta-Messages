@@ -19,7 +19,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/conversation_list_card_margin_side"
+    android:paddingEnd="@dimen/conversation_list_card_margin_side"
+    android:paddingBottom="@dimen/conversation_list_card_gap"
+    android:clipToPadding="false">
 
     <!-- The background displayed when the conversation is swiped sideways -->
     <LinearLayout
@@ -29,7 +33,6 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical|start"
         android:baselineAligned="false"
-        android:background="@color/window_background"
         android:visibility="gone"
         android:padding="@dimen/conversation_list_item_view_padding">
         <ImageView
@@ -64,7 +67,6 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
             android:clipToPadding="false"
             android:duplicateParentState="true"
             android:padding="@dimen/conversation_list_item_view_padding"

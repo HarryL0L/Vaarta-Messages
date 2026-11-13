@@ -123,7 +123,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
         Drawable drawable = ResourcesCompat.getDrawable(context.getResources(),
                 androidx.appcompat.R.drawable.abc_textfield_search_default_mtrl_alpha,
                 context.getTheme());
-        int drawableColor = ContextCompat.getColor(context, android.R.color.white);
+        int drawableColor = ContextCompat.getColor(context, R.color.compose_contact_divider);
         DrawableCompat.setTint(drawable.mutate(), drawableColor);
 
         setBackground(drawable);

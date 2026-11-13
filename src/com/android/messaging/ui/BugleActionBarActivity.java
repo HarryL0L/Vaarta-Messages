@@ -71,8 +71,16 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
         mLastScreenHeight = getResources().getDisplayMetrics().heightPixels;
         LogUtil.v(LogUtil.BUGLE_TAG, this.getLocalClassName() + ".onCreate");
 
-        getWindow().setStatusBarColor(getResources().getColor(R.color.action_bar_background_color,
-                getTheme()));
+    }
+
+    /**
+     * Paints the action bar and the status bar above it in one colour, so the two read as a
+     * single surface.
+     */
+    protected void setBarColor(final ActionBar actionBar, final int colorResId) {
+        final int color = getResources().getColor(colorResId, getTheme());
+        actionBar.setBackgroundDrawable(new ColorDrawable(color));
+        getWindow().setStatusBarColor(color);
     }
 
     @Override
@@ -338,8 +346,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(false);
             mActionMode.getCallback().onPrepareActionMode(mActionMode, mActionBarMenu);
-            actionBar.setBackgroundDrawable(new ColorDrawable(
-                    getResources().getColor(R.color.contextual_action_bar_background_color)));
+            setBarColor(actionBar, R.color.contextual_action_bar_background_color);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_cancel_small_light);
             actionBar.show();
         }

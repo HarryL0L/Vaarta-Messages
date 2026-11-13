@@ -18,8 +18,11 @@ package com.android.messaging.ui.conversationlist;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -120,7 +123,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
     private ViewGroup mCrossSwipeBackground;
+    private static final int CARD_SHAPE_FIRST = 1;
+    private static final int CARD_SHAPE_LAST = 2;
+
     private ViewGroup mSwipeableContent;
+    private int mCardShape = -1;
     private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
     private TextView mSnippetTextView;
@@ -191,11 +198,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setConversationName() {
+        // The name always uses the strongest text colour; weight alone marks unread threads.
+        mConversationNameView.setTextColor(mListItemUnreadColor);
         if (mData.getIsRead() || mData.getShowDraft()) {
-            mConversationNameView.setTextColor(mListItemReadColor);
             mConversationNameView.setTypeface(mListItemReadTypeface);
         } else {
-            mConversationNameView.setTextColor(mListItemUnreadColor);
             mConversationNameView.setTypeface(mListItemUnreadTypeface);
         }
 
@@ -367,6 +374,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mData.bind(cursor);
 
         resetAnimatingState();
+        updateCardShape(cursor.isFirst(), cursor.isLast());
 
         mSwipeableContainer.setOnClickListener(this);
         mSwipeableContainer.setOnLongClickListener(this);
@@ -514,6 +522,46 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
     }
 
+    /**
+     * Conversations are drawn as a stack of cards that reads as one segmented group: the
+     * outer corners of the first and last card are large, the corners between neighbours
+     * are small.
+     */
+    private void updateCardShape(final boolean first, final boolean last) {
+        final int shape = (first ? CARD_SHAPE_FIRST : 0) | (last ? CARD_SHAPE_LAST : 0);
+        if (shape == mCardShape) {
+            return;
+        }
+        mCardShape = shape;
+
+        final Resources res = getResources();
+        final Resources.Theme theme = getContext().getTheme();
+        final float outer = res.getDimension(R.dimen.conversation_list_card_corner_radius);
+        final float inner = res.getDimension(R.dimen.conversation_list_card_corner_radius_inner);
+        final float top = first ? outer : inner;
+        final float bottom = last ? outer : inner;
+        final float[] radii = { top, top, top, top, bottom, bottom, bottom, bottom };
+
+        final StateListDrawable card = new StateListDrawable();
+        card.addState(new int[] { android.R.attr.state_selected }, createCard(radii,
+                res.getColor(R.color.conversation_list_item_background_selected, theme)));
+        card.addState(new int[0], createCard(radii,
+                res.getColor(R.color.conversation_list_item_background, theme)));
+        mSwipeableContent.setBackground(new RippleDrawable(
+                ColorStateList.valueOf(res.getColor(R.color.m3_ripple, theme)), card, null));
+
+        mCrossSwipeBackground.setBackground(createCard(radii,
+                res.getColor(R.color.conversation_list_swipe_background, theme)));
+    }
+
+    private static GradientDrawable createCard(final float[] radii, final int color) {
+        final GradientDrawable card = new GradientDrawable();
+        card.setShape(GradientDrawable.RECTANGLE);
+        card.setCornerRadii(radii);
+        card.setColor(color);
+        return card;
+    }
+
     public boolean isSwipeAnimatable() {
         return mHostInterface.isSwipeAnimatable();
     }
@@ -529,7 +577,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
             mCrossSwipeArchiveRightImageView.setVisibility(GONE);
 
-            mSwipeableContainer.setBackgroundColor(Color.TRANSPARENT);
         } else {
             mCrossSwipeBackground.setVisibility(View.VISIBLE);
             if (translationX > 0) {
@@ -539,7 +586,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
                 mCrossSwipeArchiveRightImageView.setVisibility(VISIBLE);
             }
-            mSwipeableContainer.setBackgroundResource(R.color.window_background);
         }
     }
 

@@ -20,6 +20,9 @@
     android:id="@+id/snackbarContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="12dp"
     android:orientation="horizontal">
 
     <!--
@@ -33,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#323232" >
+        android:background="@drawable/snack_bar_background" >
 
         <FrameLayout
             android:id="@+id/snack_bar_message_wrapper"
@@ -58,7 +61,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:textColor="#EEFF41"
+            android:textColor="@color/snack_bar_action_text"
+            android:fontFamily="sans-serif-medium"
             android:textAllCaps="true" />
     </LinearLayout>
 

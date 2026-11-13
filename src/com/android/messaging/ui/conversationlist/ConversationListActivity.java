@@ -17,7 +17,6 @@
 
 package com.android.messaging.ui.conversationlist;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,8 +50,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                getResources().getColor(R.color.action_bar_background_color)));
+        setBarColor(actionBar, R.color.action_bar_background_color);
         actionBar.show();
         super.updateActionBar(actionBar);
     }

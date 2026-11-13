@@ -18,14 +18,15 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.util.ImageUtils;
+import com.android.messaging.util.UiUtils;
 
 /**
  * A singleton cache that holds tinted drawable resources for displaying messages, such as
@@ -36,8 +37,6 @@ public class ConversationDrawables {
 
     // Cache the color filtered bubble drawables so that we don't need to create a
     // new one for each ConversationMessageView.
-    private Drawable mIncomingBubbleNoArrowDrawable;
-    private Drawable mOutgoingBubbleNoArrowDrawable;
     private Drawable mAudioPlayButtonDrawable;
     private Drawable mAudioPauseButtonDrawable;
     private Drawable mIncomingAudioProgressBackgroundDrawable;
@@ -48,12 +47,14 @@ public class ConversationDrawables {
     private Drawable mFastScrollPreviewDrawableLeft;
     private Drawable mFastScrollPreviewDrawableRight;
     private final Context mContext;
+    private int mIncomingBubbleColor;
     private int mOutgoingBubbleColor;
+    private float mBubbleCornerRadius;
+    private float mBubbleCornerRadiusGrouped;
     private int mIncomingErrorBubbleColor;
     private int mIncomingAudioButtonColor;
     private int mSelectedBubbleColor;
     private int mThemeColor;
-    private TypedArray mColors;
 
     public static ConversationDrawables get() {
         if (sInstance == null) {
@@ -76,10 +77,6 @@ public class ConversationDrawables {
         final Resources resources = mContext.getResources();
         final Resources.Theme theme = mContext.getTheme();
 
-        mIncomingBubbleNoArrowDrawable = ResourcesCompat.getDrawable(resources,
-                R.drawable.message_bubble_incoming_no_arrow, theme);
-        mOutgoingBubbleNoArrowDrawable = ResourcesCompat.getDrawable(resources,
-                R.drawable.message_bubble_outgoing_no_arrow, theme);
         mAudioPlayButtonDrawable = ResourcesCompat.getDrawable(resources,
                 R.drawable.ic_play_light, theme);
         mAudioPauseButtonDrawable = ResourcesCompat.getDrawable(resources,
@@ -98,45 +95,61 @@ public class ConversationDrawables {
                 R.drawable.fastscroll_preview_left, theme);
         mFastScrollPreviewDrawableRight = ResourcesCompat.getDrawable(resources,
                 R.drawable.fastscroll_preview_right, theme);
+        mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming, theme);
         mOutgoingBubbleColor = resources.getColor(R.color.message_bubble_color_outgoing, theme);
+        mBubbleCornerRadius = resources.getDimension(R.dimen.message_bubble_corner_radius);
+        mBubbleCornerRadiusGrouped =
+                resources.getDimension(R.dimen.message_bubble_corner_radius_grouped);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming, theme);
         mIncomingAudioButtonColor =
                 resources.getColor(R.color.message_audio_button_color_incoming, theme);
         mSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected, theme);
         mThemeColor = resources.getColor(R.color.primary_color, theme);
-        mColors = resources.obtainTypedArray(R.array.letter_tile_colors);
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
                                       final boolean isError, final String identifier) {
-        final Drawable protoDrawable;
-        if (incoming) {
-            protoDrawable = mIncomingBubbleNoArrowDrawable;
-        } else {
-            protoDrawable = mOutgoingBubbleNoArrowDrawable;
-        }
+        return getBubbleDrawable(selected, incoming, isError, false, false);
+    }
 
-        int color;
+    /**
+     * Builds a message bubble. Bubbles that belong to a run of messages from the same sender
+     * get tighter corners on the sender's side where they meet their neighbours, so the run
+     * reads as one group.
+     *
+     * @param clusterWithPrevious the message above is part of the same run
+     * @param clusterWithNext the message below is part of the same run
+     */
+    public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
+            final boolean isError, final boolean clusterWithPrevious,
+            final boolean clusterWithNext) {
+        final int color;
         if (selected) {
             color = mSelectedBubbleColor;
         } else if (incoming) {
-            if (isError) {
-                color = mIncomingErrorBubbleColor;
-            } else {
-                if (identifier != null &&
-                        mContext.getResources().getBoolean(R.bool.contact_colors)) {
-                    int idcolor = Math.abs(identifier.hashCode()) % mColors.length();
-                    color = mColors.getColor(idcolor, mThemeColor);
-                } else {
-                    color = mThemeColor;
-                }
-            }
+            color = isError ? mIncomingErrorBubbleColor : mIncomingBubbleColor;
         } else {
             color = mOutgoingBubbleColor;
         }
 
-        return ImageUtils.getTintedDrawable(mContext, protoDrawable, color);
+        final float top = clusterWithPrevious ? mBubbleCornerRadiusGrouped : mBubbleCornerRadius;
+        final float bottom = clusterWithNext ? mBubbleCornerRadiusGrouped : mBubbleCornerRadius;
+        final float r = mBubbleCornerRadius;
+        // The sender's side is the start edge for incoming messages and the end edge for
+        // outgoing ones; flip it for right-to-left layouts.
+        final boolean senderOnLeft = incoming != UiUtils.isRtlMode();
+
+        final GradientDrawable bubble = new GradientDrawable();
+        bubble.setShape(GradientDrawable.RECTANGLE);
+        bubble.setColor(color);
+        // Radii are ordered top-left, top-right, bottom-right, bottom-left.
+        if (senderOnLeft) {
+            bubble.setCornerRadii(new float[] { top, top, r, r, r, r, bottom, bottom });
+        } else {
+            bubble.setCornerRadii(new float[] { r, r, top, top, bottom, bottom, r, r });
+        }
+        return bubble;
     }
 
     private int getAudioButtonColor(final boolean incoming) {

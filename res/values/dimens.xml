@@ -17,8 +17,8 @@
 -->
 <resources>
 
-    <dimen name="action_bar_height">56dp</dimen>
-    <dimen name="action_bar_text_size">20sp</dimen>
+    <dimen name="action_bar_height">64dp</dimen>
+    <dimen name="action_bar_text_size">22sp</dimen>
     <dimen name="conversation_message_text_size">16sp</dimen>
     <dimen name="conversation_status_text_size">12sp</dimen>
     <dimen name="conversation_title_text_size">12sp</dimen>
@@ -29,7 +29,7 @@
     <dimen name="contact_icon_view_small_size">12dp</dimen>
     <dimen name="conversation_list_item_view_padding">16dp</dimen>
     <dimen name="conversation_list_first_item_extra_padding">8dp</dimen>
-    <dimen name="conversation_list_image_preview_corner_radius">3dp</dimen>
+    <dimen name="conversation_list_image_preview_corner_radius">12dp</dimen>
     <dimen name="conversation_list_image_preview_size">56dp</dimen>
     <dimen name="conversation_list_contact_icon_size">56dp</dimen>
     <dimen name="conversation_message_contact_icon_size">48dp</dimen>
@@ -40,8 +40,8 @@
     <dimen name="message_bubble_arrow_width">9dp</dimen>
     <dimen name="message_text_bottom_padding">12dp</dimen>
     <dimen name="message_text_top_padding">10dp</dimen>
-    <dimen name="message_text_left_right_padding">14dp</dimen>
-    <dimen name="message_padding_default">18dp</dimen>
+    <dimen name="message_text_left_right_padding">16dp</dimen>
+    <dimen name="message_padding_default">12dp</dimen>
     <dimen name="message_padding_same_author">2dp</dimen>
     <dimen name="message_metadata_top_padding">4dp</dimen>
 
@@ -52,7 +52,7 @@
     <dimen name="compose_message_attachment_padding_sides">0dp</dimen>
     <dimen name="compose_message_attachment_padding_topBottom">10dp</dimen>
     <dimen name="compose_message_chips_view_max_height">133dp</dimen>
-    <dimen name="compose_message_subject_left_padding">52dp</dimen>
+    <dimen name="compose_message_subject_left_padding">12dp</dimen>
     <dimen name="compose_message_subject_right_padding">64dp</dimen>
     <dimen name="compose_message_subject_top_padding">4dp</dimen>
     <dimen name="compose_message_subject_bottom_padding">6dp</dimen>
@@ -73,7 +73,7 @@
     <dimen name="recipient_edit_text_size">20sp</dimen>
     <dimen name="pager_tab_header_text_size">14sp</dimen>
     <dimen name="pager_tab_underline_selected">2dp</dimen>
-    <dimen name="contact_list_alphabet_header_text_size">26dp</dimen>
+    <dimen name="contact_list_alphabet_header_text_size">22dp</dimen>
 
     <!-- Flings slower than this length / sec will be ignored -->
     <dimen name="mediapicker_fling_threshold">150dp</dimen>
@@ -161,4 +161,16 @@
     <dimen name="directory_header_padding_bottom">8dp</dimen>
     <dimen name="directory_header_text_size">14sp</dimen>
 
+
+    <!-- Material 3 Expressive refresh -->
+    <dimen name="conversation_list_card_margin_side">12dp</dimen>
+    <dimen name="conversation_list_card_gap">2dp</dimen>
+    <dimen name="conversation_list_card_corner_radius">24dp</dimen>
+    <dimen name="conversation_list_card_corner_radius_inner">6dp</dimen>
+    <dimen name="conversation_list_bottom_padding">96dp</dimen>
+    <dimen name="fab_min_height">64dp</dimen>
+    <dimen name="message_bubble_corner_radius">22dp</dimen>
+    <dimen name="message_bubble_corner_radius_grouped">6dp</dimen>
+    <dimen name="compose_message_pill_margin_start">12dp</dimen>
+    <dimen name="compose_message_pill_margin_end">8dp</dimen>
 </resources>

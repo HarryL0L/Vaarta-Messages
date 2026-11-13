@@ -16,14 +16,9 @@
     limitations under the License.
 -->
 <resources>
-    <color name="lineage_accent">@android:color/system_accent1_100</color>
-
-    <color name="window_background">@android:color/system_neutral1_900</color>
-
-    <color name="compose_send_text_background_color">@android:color/system_neutral1_600</color>
-
-    <color name="fab_fg_color">@android:color/black</color>
-
-    <color name="attachment_bg_color">@android:color/system_neutral1_800</color>
-    <color name="subject_editor_bubble">@android:color/system_accent1_800</color>
+    <!-- Colours follow the Material 3 roles in m3_colors.xml, which carry their own
+         night variants. Only the few literal colours need an override here. -->
+    <color name="sim_selector_background_end">#cc211f26</color>
+    <color name="sim_selector_background_start">#ff211f26</color>
+    <color name="text_highlight_color">@android:color/system_accent1_600</color>
 </resources>

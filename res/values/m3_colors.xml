@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2025 The LineageOS Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<resources>
+    <!-- Material 3 colour roles, approximated from the Android 12/13 tonal palettes.
+         Android 14+ uses the exact system role tokens, see values-v34. -->
+    <color name="m3_primary">@android:color/system_accent1_600</color>
+    <color name="m3_on_primary">@android:color/system_accent1_0</color>
+    <color name="m3_primary_container">@android:color/system_accent1_100</color>
+    <color name="m3_on_primary_container">@android:color/system_accent1_900</color>
+    <color name="m3_secondary_container">@android:color/system_accent2_100</color>
+    <color name="m3_on_secondary_container">@android:color/system_accent2_900</color>
+    <color name="m3_tertiary_container">@android:color/system_accent3_100</color>
+    <color name="m3_on_tertiary_container">@android:color/system_accent3_900</color>
+    <color name="m3_surface">@android:color/system_neutral1_10</color>
+    <color name="m3_surface_bright">@android:color/system_neutral1_10</color>
+    <color name="m3_surface_container_low">@android:color/system_neutral1_50</color>
+    <color name="m3_surface_container">@android:color/system_neutral1_50</color>
+    <color name="m3_surface_container_high">@android:color/system_neutral1_100</color>
+    <color name="m3_surface_container_highest">@android:color/system_neutral1_100</color>
+    <color name="m3_on_surface">@android:color/system_neutral1_900</color>
+    <color name="m3_on_surface_variant">@android:color/system_neutral2_700</color>
+    <color name="m3_outline">@android:color/system_neutral2_500</color>
+    <color name="m3_outline_variant">@android:color/system_neutral2_200</color>
+    <color name="m3_error">#B3261E</color>
+    <color name="m3_on_error">#FFFFFF</color>
+    <color name="m3_error_container">#F9DEDC</color>
+    <color name="m3_on_error_container">#410E0B</color>
+
+    <!-- State layer for presses on top of surfaces -->
+    <color name="m3_ripple">#1F1D1B20</color>
+</resources>

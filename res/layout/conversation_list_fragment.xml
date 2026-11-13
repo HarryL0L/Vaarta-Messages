@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/conversation_list_first_item_extra_padding"
+        android:paddingBottom="@dimen/conversation_list_bottom_padding"
         android:clipToPadding="false"
         android:listSelector="?android:attr/listSelector"
         android:dividerHeight="0px" />
@@ -44,8 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:minHeight="@dimen/fab_min_height"
+        android:textAppearance="@style/TextAppearance.Bugle.Fab"
         android:text="@string/start_chat"
-        android:forceDarkAllowed="false"
         android:textColor="@color/fab_fg_color"
         app:backgroundTint="@color/fab_color"
         app:icon="@drawable/ic_message"
