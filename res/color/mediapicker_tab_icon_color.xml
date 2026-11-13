@@ -4,6 +4,6 @@
     SPDX-License-Identifier: Apache-2.0
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/m3_primary" android:state_selected="true" />
+    <item android:color="@color/m3_on_secondary_container" android:state_selected="true" />
     <item android:color="@color/m3_on_surface_variant" />
 </selector>

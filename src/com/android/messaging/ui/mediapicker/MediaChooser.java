@@ -76,7 +76,6 @@ abstract class MediaChooser extends BasePagerViewHolder
         }
         if (mTabButton != null) {
             mTabButton.setSelected(selected);
-            mTabButton.setAlpha(selected ? 1 : 0.5f);
         }
     }
 
