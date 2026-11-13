@@ -1159,7 +1159,45 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mHost.invalidateActionBar();
 
             mRecyclerView.setVisibility(View.VISIBLE);
+
+            updateReplyAvailability();
         }
+    }
+
+    /**
+     * Businesses often send from a name such as "JM-MYBANK" instead of a number. Nothing can
+     * be sent back to such a sender, so swap the composer for a short notice.
+     */
+    private void updateReplyAvailability() {
+        final View root = getView();
+        if (root == null || mComposeMessageView == null) {
+            return;
+        }
+        final ParticipantData other = mBinding.getData().getOtherParticipant();
+        final boolean canReply = other == null || canReplyTo(other);
+        mComposeMessageView.setVisibility(canReply ? View.VISIBLE : View.GONE);
+        root.findViewById(R.id.cant_reply_notice)
+                .setVisibility(canReply ? View.GONE : View.VISIBLE);
+    }
+
+    private static boolean canReplyTo(final ParticipantData participant) {
+        if (participant.isEmail()) {
+            return true;
+        }
+        if (participant.isUnknownSender()) {
+            return false;
+        }
+        final String destination = participant.getSendDestination();
+        if (TextUtils.isEmpty(destination)) {
+            return true;
+        }
+        // A phone number or short code never contains letters; a sender ID does.
+        for (int i = 0; i < destination.length(); i++) {
+            if (Character.isLetter(destination.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

@@ -58,6 +58,27 @@
                 android:visibility="gone" />
         </FrameLayout>
 
+        <!-- Shown in place of the composer for senders that cannot receive replies -->
+        <TextView
+            android:id="@+id/cant_reply_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:minHeight="48dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center"
+            android:text="@string/cant_reply_to_sender"
+            android:textSize="14sp"
+            android:textColor="@color/m3_on_surface_variant"
+            android:background="@drawable/cant_reply_notice_background"
+            android:visibility="gone" />
+
         <!-- Attachments to send, compose message view, media picker. -->
         <include layout="@layout/compose_message_view"
             android:id="@+id/message_compose_view_container"

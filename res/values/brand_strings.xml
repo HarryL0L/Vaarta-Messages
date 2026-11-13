@@ -8,4 +8,8 @@
     <string name="app_brand_name" translatable="false">Vaarta Messages</string>
     <!-- Short form shown under the launcher icon, where the full name would be cut off. -->
     <string name="app_launcher_name" translatable="false">Vaarta</string>
+
+    <!-- Shown instead of the message field in a conversation with a sender ID, such as
+         a bank or carrier name, that replies cannot be sent to. -->
+    <string name="cant_reply_to_sender">You can\'t reply to this sender</string>
 </resources>
