@@ -16,7 +16,7 @@
  */
 package com.android.messaging.ui.conversationsettings;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;

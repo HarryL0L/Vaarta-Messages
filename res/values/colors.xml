@@ -20,6 +20,9 @@
     <color name="permission_check_activity_background">@android:color/system_accent1_600</color>
 
     <!--  Action bar -->
+    <!-- Icons in action bars, menus and the composer: full-strength so they stay legible
+         on tonal bars in both light and dark themes -->
+    <color name="action_bar_icon_color">@color/m3_on_surface</color>
     <color name="action_bar_title_text_color">@color/m3_on_surface</color>
     <color name="action_bar_background_color">@color/m3_surface_container</color>
     <color name="action_bar_background_color_dark">@color/m3_surface_container</color>

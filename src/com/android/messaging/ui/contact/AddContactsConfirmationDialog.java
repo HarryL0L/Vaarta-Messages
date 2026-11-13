@@ -16,7 +16,7 @@
  */
 package com.android.messaging.ui.contact;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;

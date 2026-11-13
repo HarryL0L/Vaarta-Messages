@@ -18,7 +18,7 @@
 package com.android.messaging.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
