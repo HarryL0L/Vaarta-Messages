@@ -53,7 +53,7 @@ public class MessagingContentProvider extends ContentProvider {
     private static final String TAG = LogUtil.BUGLE_TAG;
 
     public static final String AUTHORITY =
-            "io.github.harryl0l.messify.datamodel.MessagingContentProvider";
+            "io.github.harryl0l.vaarta.datamodel.MessagingContentProvider";
     private static final String CONTENT_AUTHORITY = "content://" + AUTHORITY + '/';
 
     // Conversations query

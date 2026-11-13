@@ -32,7 +32,7 @@ import java.io.IOException;
 public class MmsFileProvider extends FileProvider {
     private static final String TAG = LogUtil.BUGLE_TAG;
 
-    static final String AUTHORITY = "io.github.harryl0l.messify.datamodel.MmsFileProvider";
+    static final String AUTHORITY = "io.github.harryl0l.vaarta.datamodel.MmsFileProvider";
     private static final String RAW_MMS_DIR = "rawmms";
 
     /**

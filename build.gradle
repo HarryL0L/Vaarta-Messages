@@ -1,4 +1,4 @@
-// Standalone build of Messify. Inside an Android source tree the app is built
+// Standalone build of Vaarta Messages. Inside an Android source tree the app is built
 // with Soong instead; see Android.bp.
 
 plugins {
@@ -8,7 +8,7 @@ plugins {
 
 // Release signing is configured through environment variables so that no key
 // ever lives in the repository. Without them, release builds are left unsigned.
-def releaseKeystore = System.getenv('MESSIFY_KEYSTORE_FILE')
+def releaseKeystore = System.getenv('VAARTA_KEYSTORE_FILE')
 
 android {
     // The package the code and its R class live in. Unchanged from upstream so
@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         // The identity of the installed app.
-        applicationId = 'io.github.harryl0l.messify'
+        applicationId = 'io.github.harryl0l.vaarta'
         minSdk = 33
         targetSdk = 34
         versionCode = 10001040
@@ -52,9 +52,9 @@ android {
         if (releaseKeystore) {
             release {
                 storeFile = file(releaseKeystore)
-                storePassword = System.getenv('MESSIFY_KEYSTORE_PASSWORD')
-                keyAlias = System.getenv('MESSIFY_KEY_ALIAS')
-                keyPassword = System.getenv('MESSIFY_KEY_PASSWORD')
+                storePassword = System.getenv('VAARTA_KEYSTORE_PASSWORD')
+                keyAlias = System.getenv('VAARTA_KEY_ALIAS')
+                keyPassword = System.getenv('VAARTA_KEY_PASSWORD')
             }
         }
     }

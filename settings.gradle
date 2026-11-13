@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'Messify'
+rootProject.name = 'Vaarta'
 
 if (!file('third_party/chips/src').exists()) {
     throw new GradleException(

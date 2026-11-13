@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      HAS_KEYSTORE: ${{ secrets.MESSIFY_KEYSTORE_BASE64 != '' }}
+      HAS_KEYSTORE: ${{ secrets.VAARTA_KEYSTORE_BASE64 != '' }}
 
     steps:
       - name: Check out
@@ -48,7 +48,7 @@ jobs:
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Messify-debug
+          name: Vaarta-debug
           path: build/outputs/apk/debug/*.apk
           if-no-files-found: error
 
@@ -58,18 +58,18 @@ jobs:
       - name: Build signed release APK
         if: github.event_name != 'pull_request' && env.HAS_KEYSTORE == 'true'
         env:
-          KEYSTORE_BASE64: ${{ secrets.MESSIFY_KEYSTORE_BASE64 }}
-          MESSIFY_KEYSTORE_PASSWORD: ${{ secrets.MESSIFY_KEYSTORE_PASSWORD }}
-          MESSIFY_KEY_ALIAS: ${{ secrets.MESSIFY_KEY_ALIAS }}
-          MESSIFY_KEY_PASSWORD: ${{ secrets.MESSIFY_KEY_PASSWORD }}
+          KEYSTORE_BASE64: ${{ secrets.VAARTA_KEYSTORE_BASE64 }}
+          VAARTA_KEYSTORE_PASSWORD: ${{ secrets.VAARTA_KEYSTORE_PASSWORD }}
+          VAARTA_KEY_ALIAS: ${{ secrets.VAARTA_KEY_ALIAS }}
+          VAARTA_KEY_PASSWORD: ${{ secrets.VAARTA_KEY_PASSWORD }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/messify.jks"
-          MESSIFY_KEYSTORE_FILE="$RUNNER_TEMP/messify.jks" ./gradlew assembleRelease --stacktrace
-          rm -f "$RUNNER_TEMP/messify.jks"
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/vaarta.jks"
+          VAARTA_KEYSTORE_FILE="$RUNNER_TEMP/vaarta.jks" ./gradlew assembleRelease --stacktrace
+          rm -f "$RUNNER_TEMP/vaarta.jks"
 
       - name: Upload release APK
         if: github.event_name != 'pull_request' && env.HAS_KEYSTORE == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: Messify-release
+          name: Vaarta-release
           path: build/outputs/apk/release/*.apk

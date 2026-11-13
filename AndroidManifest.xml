@@ -91,6 +91,7 @@
         <!-- Displays a list of conversations -->
         <activity
             android:name=".ui.conversationlist.ConversationListActivity"
+            android:label="@string/app_launcher_name"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
             android:screenOrientation="user"
@@ -287,20 +288,20 @@
 
         <provider
             android:name=".datamodel.MessagingContentProvider"
-            android:authorities="io.github.harryl0l.messify.datamodel.MessagingContentProvider"
+            android:authorities="io.github.harryl0l.vaarta.datamodel.MessagingContentProvider"
             android:exported="false"
             android:label="@string/app_brand_name">
         </provider>
 
         <provider
             android:name=".datamodel.MmsFileProvider"
-            android:authorities="io.github.harryl0l.messify.datamodel.MmsFileProvider"
+            android:authorities="io.github.harryl0l.vaarta.datamodel.MmsFileProvider"
             android:exported="false"
             android:grantUriPermissions="true" />
 
         <provider
             android:name=".datamodel.MediaScratchFileProvider"
-            android:authorities="io.github.harryl0l.messify.datamodel.MediaScratchFileProvider"
+            android:authorities="io.github.harryl0l.vaarta.datamodel.MediaScratchFileProvider"
             android:exported="false"
             android:grantUriPermissions="true" />
 

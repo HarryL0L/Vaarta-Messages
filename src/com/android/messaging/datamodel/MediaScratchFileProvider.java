@@ -46,7 +46,7 @@ public class MediaScratchFileProvider extends FileProvider {
     private static final SimpleArrayMap<Uri, String> sUriToDisplayNameMap = new SimpleArrayMap<>();
 
     public static final String AUTHORITY =
-            "io.github.harryl0l.messify.datamodel.MediaScratchFileProvider";
+            "io.github.harryl0l.vaarta.datamodel.MediaScratchFileProvider";
     private static final String MEDIA_SCRATCH_SPACE_DIR = "mediascratchspace";
 
     public static boolean isMediaScratchSpaceUri(final Uri uri) {

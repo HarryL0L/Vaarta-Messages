@@ -1,11 +1,12 @@
-# Messify
+# Vaarta Messages
 
 An SMS/MMS app for Android with a Material 3 Expressive look: dynamic colour,
 tonal surfaces, grouped message bubbles and a card-style conversation list.
+*Vaarta* (वार्ता) is Hindi for conversation.
 
 ## Credits
 
-Messify is not written from scratch. It is based on, and gratefully builds on:
+Vaarta Messages is not written from scratch. It is based on, and gratefully builds on:
 
 - **[LineageOS Messaging](https://github.com/LineageOS/android_packages_apps_Messaging)**,
   the messaging app maintained by The LineageOS Project, which this repository
@@ -35,7 +36,7 @@ history and in the copyright headers of the source files.
 
 The APK is written to `build/outputs/apk/debug/`. You need JDK 17 and the
 Android SDK; Gradle downloads the NDK and CMake it needs for the native GIF
-transcoder. The app installs as `io.github.harryl0l.messify`, so it can live
+transcoder. The app installs as `io.github.harryl0l.vaarta`, so it can live
 next to a system Messaging app.
 
 Every push to `main` is also built by GitHub Actions
@@ -46,10 +47,10 @@ APKs signed with your own key, add these repository secrets:
 
 | Secret | Value |
 | --- | --- |
-| `MESSIFY_KEYSTORE_BASE64` | your keystore file, base64-encoded |
-| `MESSIFY_KEYSTORE_PASSWORD` | keystore password |
-| `MESSIFY_KEY_ALIAS` | key alias |
-| `MESSIFY_KEY_PASSWORD` | key password |
+| `VAARTA_KEYSTORE_BASE64` | your keystore file, base64-encoded |
+| `VAARTA_KEYSTORE_PASSWORD` | keystore password |
+| `VAARTA_KEY_ALIAS` | key alias |
+| `VAARTA_KEY_PASSWORD` | key password |
 
 ### Inside an Android source tree (Soong)
 
@@ -63,6 +64,6 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
     Copyright (C) 2015 The Android Open Source Project
     Copyright (C) The LineageOS Project
 
-Files changed for Messify carry the upstream copyright notices unchanged, as
+Files changed for Vaarta Messages carry the upstream copyright notices unchanged, as
 the licence requires. Licences of bundled third-party components are listed in
 `assets/licenses.html`.

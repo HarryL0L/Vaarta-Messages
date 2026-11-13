@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Fetches the AOSP libraries Messify is built against into third_party/.
+# Fetches the AOSP libraries Vaarta Messages is built against into third_party/.
 #
 # Inside an Android source tree these come from the tree itself (see
 # Android.bp). The standalone Gradle build needs its own copies, pinned here
