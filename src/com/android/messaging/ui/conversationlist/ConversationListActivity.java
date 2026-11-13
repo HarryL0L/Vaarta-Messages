@@ -17,6 +17,7 @@
 
 package com.android.messaging.ui.conversationlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.search.SearchActivity;
 import com.android.messaging.util.Trace;
 
 public class ConversationListActivity extends AbstractConversationListActivity {
@@ -85,7 +87,10 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem menuItem) {
         int itemId = menuItem.getItemId();
-        if (itemId == R.id.action_start_new_conversation) {
+        if (itemId == R.id.action_search) {
+            startActivity(new Intent(this, SearchActivity.class));
+            return true;
+        } else if (itemId == R.id.action_start_new_conversation) {
             onActionBarStartNewConversation();
             return true;
         } else if (itemId == R.id.action_settings) {

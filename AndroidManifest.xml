@@ -134,6 +134,15 @@
             </intent-filter>
         </activity>
 
+        <!-- Searches conversation names and message text -->
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/search_messages"
+            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:theme="@style/BugleTheme.NoActionBar" />
+
         <!-- Displays a list of archived conversations -->
         <activity
             android:name=".ui.conversationlist.ArchivedConversationListActivity"

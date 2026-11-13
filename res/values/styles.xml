@@ -98,6 +98,11 @@
         <item name="android:textSize">@dimen/settings_list_text_size</item>
     </style>
 
+    <style name="BugleTheme.NoActionBar" parent="BugleTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!-- Shown while the app is missing its permissions; has no action bar -->
     <style name="BugleTheme.PermissionCheckActivity" parent="BugleTheme">
         <item name="android:windowActionBar">false</item>

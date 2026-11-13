@@ -12,4 +12,8 @@
     <!-- Shown instead of the message field in a conversation with a sender ID, such as
          a bank or carrier name, that replies cannot be sent to. -->
     <string name="cant_reply_to_sender">You can\'t reply to this sender</string>
+
+    <!-- Search -->
+    <string name="search_messages">Search messages</string>
+    <string name="search_no_results">No messages found</string>
 </resources>
