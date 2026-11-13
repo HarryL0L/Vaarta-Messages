@@ -15,16 +15,24 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/settings_list_item_height"
-    android:gravity="center_vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:background="?android:attr/selectableItemBackground" >
-
+    android:layout_height="wrap_content"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+    <!-- Each entry is its own rounded card -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="72dp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="@drawable/settings_card_background">
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -42,4 +50,5 @@
         android:ellipsize="end"
         style="@style/SettingsListItemDetail" />
 
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

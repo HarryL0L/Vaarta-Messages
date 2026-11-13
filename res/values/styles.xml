@@ -641,11 +641,28 @@
     </style>
 
     <style name="AppPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="preferenceStyle">@style/AppPreference</item>
+        <item name="preferenceCategoryStyle">@style/AppPreferenceCategory</item>
+        <item name="editTextPreferenceStyle">@style/AppEditTextPreference</item>
         <item name="switchPreferenceCompatStyle">@style/AppSwitchPreference</item>
+    </style>
+
+    <!-- None of the settings have icons, so do not indent them to leave room for one. -->
+    <style name="AppPreference" parent="@style/Preference.Material">
+        <item name="iconSpaceReserved">false</item>
+    </style>
+
+    <style name="AppPreferenceCategory" parent="@style/Preference.Category.Material">
+        <item name="iconSpaceReserved">false</item>
+    </style>
+
+    <style name="AppEditTextPreference" parent="@style/Preference.DialogPreference.EditTextPreference.Material">
+        <item name="iconSpaceReserved">false</item>
     </style>
 
     <style name="AppSwitchPreference" parent="@style/Preference.SwitchPreferenceCompat.Material">
         <item name="widgetLayout">@layout/preference_material_switch</item>
+        <item name="iconSpaceReserved">false</item>
     </style>
 
     <!-- Expressive FAB: a soft, large-radius squircle rather than a full pill -->
