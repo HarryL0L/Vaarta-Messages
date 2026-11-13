@@ -19,6 +19,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:name="com.android.messaging.ui.VCardDetailFragment"
     android:id="@+id/vcard_detail_fragment"
-    android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
