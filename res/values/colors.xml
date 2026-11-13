@@ -17,7 +17,7 @@
 -->
 <resources>
     <color name="primary_color">@color/m3_primary</color>
-    <color name="permission_check_activity_background">@android:color/system_accent1_600</color>
+    <color name="permission_check_activity_background">@color/window_background</color>
 
     <!--  Action bar -->
     <!-- Icons in action bars, menus and the composer: full-strength so they stay legible

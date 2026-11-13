@@ -34,9 +34,9 @@
     <string name="settings_with_arrow">Settings &gt;</string>
     <string name="settings">Settings</string>
     <!-- Inform user of the names of permissions that are required to use the app -->
-    <string name="required_permissions_promo">Messaging needs permission to SMS, Phone and Contacts.</string>
-    <string name="enable_permission_procedure">You can change permissions in Settings > Apps > Messaging > Permissions.</string>
-    <string name="enable_permission_procedure_description">You can change permissions in Settings, Apps, Messaging, Permissions.</string>
+    <string name="required_permissions_promo">Vaarta Messages needs permission to SMS, Phone and Contacts.</string>
+    <string name="enable_permission_procedure">You can change permissions in Settings > Apps > Vaarta Messages > Permissions.</string>
+    <string name="enable_permission_procedure_description">You can change permissions in Settings, Apps, Vaarta Messages, Permissions.</string>
 
     <!-- The tab header for the frequently used contacts list -->
     <string name="contact_picker_frequents_tab_title">Frequents</string>
