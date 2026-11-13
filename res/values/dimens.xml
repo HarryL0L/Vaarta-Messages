@@ -46,7 +46,7 @@
     <dimen name="message_metadata_top_padding">4dp</dimen>
 
     <dimen name="mediapicker_default_chooser_height">215dp</dimen>
-    <dimen name="compose_message_contacts_height">42dp</dimen>
+    <dimen name="compose_message_contacts_height">48dp</dimen>
     <dimen name="compose_message_chip_height">36dp</dimen>
     <dimen name="compose_message_chip_padding">3dp</dimen>
     <dimen name="compose_message_attachment_padding_sides">0dp</dimen>
@@ -70,9 +70,9 @@
     <dimen name="contact_list_text_size">16sp</dimen>
     <dimen name="contact_list_detail_text_size">14sp</dimen>
     <dimen name="contact_list_icon_size">42dp</dimen>
-    <dimen name="recipient_edit_text_size">20sp</dimen>
+    <dimen name="recipient_edit_text_size">18sp</dimen>
     <dimen name="pager_tab_header_text_size">14sp</dimen>
-    <dimen name="pager_tab_underline_selected">2dp</dimen>
+    <dimen name="pager_tab_underline_selected">3dp</dimen>
     <dimen name="contact_list_alphabet_header_text_size">22dp</dimen>
 
     <!-- Flings slower than this length / sec will be ignored -->
@@ -173,4 +173,7 @@
     <dimen name="message_bubble_corner_radius_grouped">6dp</dimen>
     <dimen name="compose_message_pill_margin_start">12dp</dimen>
     <dimen name="compose_message_pill_margin_end">8dp</dimen>
+    <dimen name="recipient_field_padding_side">16dp</dimen>
+    <dimen name="recipient_field_padding_vertical">8dp</dimen>
+    <dimen name="pager_tab_indicator_min_inset">24dp</dimen>
 </resources>

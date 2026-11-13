@@ -19,6 +19,7 @@ package com.android.messaging.ui;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.graphics.Outline;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -160,6 +161,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         textView.setOnClickListener(v -> mPager.setCurrentItem(getRtlPosition(position)));
 
         // Assign various text appearance related attributes to child views.
+        textView.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         if (mTextStyle > 0) {
             textView.setTypeface(textView.getTypeface(), mTextStyle);
         }

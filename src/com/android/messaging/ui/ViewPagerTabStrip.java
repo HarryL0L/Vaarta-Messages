@@ -29,6 +29,7 @@ import com.android.messaging.R;
 
 public class ViewPagerTabStrip extends LinearLayout {
     private final int mSelectedUnderlineThickness;
+    private final int mIndicatorMinInset;
     private final Paint mSelectedUnderlinePaint;
 
     private int mIndexForSelection;
@@ -49,7 +50,9 @@ public class ViewPagerTabStrip extends LinearLayout {
         int underlineColor = res.getColor(R.color.contact_picker_tab_underline, theme);
         int backgroundColor = res.getColor(R.color.action_bar_background_color, theme);
 
-        mSelectedUnderlinePaint = new Paint();
+        mIndicatorMinInset = res.getDimensionPixelSize(R.dimen.pager_tab_indicator_min_inset);
+
+        mSelectedUnderlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSelectedUnderlinePaint.setColor(underlineColor);
 
         setBackgroundColor(backgroundColor);
@@ -91,9 +94,14 @@ public class ViewPagerTabStrip extends LinearLayout {
                         (1.0f - mSelectionOffset) * selectedRight);
             }
 
-            int height = getHeight();
-            canvas.drawRect(selectedLeft, height - mSelectedUnderlineThickness,
-                    selectedRight, height, mSelectedUnderlinePaint);
+            // A short pill-topped indicator under the label rather than a bar across the
+            // whole tab. It is drawn past the bottom edge so only its top corners round.
+            final int height = getHeight();
+            final int inset = Math.max(mIndicatorMinInset, (selectedRight - selectedLeft) / 4);
+            final float radius = mSelectedUnderlineThickness;
+            canvas.drawRoundRect(selectedLeft + inset, height - mSelectedUnderlineThickness,
+                    selectedRight - inset, height + radius, radius, radius,
+                    mSelectedUnderlinePaint);
         }
     }
 

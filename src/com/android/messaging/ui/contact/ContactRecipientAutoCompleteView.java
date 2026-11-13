@@ -20,7 +20,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
@@ -33,9 +32,6 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.RecipientEntry;
@@ -120,13 +116,13 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
         addTextChangedListener(new ContactChipsWatcher());
         setOnFocusListShrinkRecipients(false);
 
-        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(),
-                androidx.appcompat.R.drawable.abc_textfield_search_default_mtrl_alpha,
-                context.getTheme());
-        int drawableColor = ContextCompat.getColor(context, R.color.compose_contact_divider);
-        DrawableCompat.setTint(drawable.mutate(), drawableColor);
-
-        setBackground(drawable);
+        // The recipients sit in a tonal pill, like the message field in a conversation.
+        final int sidePadding = context.getResources().getDimensionPixelSize(
+                R.dimen.recipient_field_padding_side);
+        final int verticalPadding = context.getResources().getDimensionPixelSize(
+                R.dimen.recipient_field_padding_vertical);
+        setBackgroundResource(R.drawable.msg_bubble_input_rounded);
+        setPaddingRelative(sidePadding, verticalPadding, sidePadding, verticalPadding);
     }
 
     public void setContactChipsListener(final ContactChipsChangeListener listener) {
