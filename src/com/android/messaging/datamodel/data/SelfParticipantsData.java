@@ -44,6 +44,9 @@ public class SelfParticipantsData {
     public void bind(final Cursor cursor) {
         mSelfParticipantMap.clear();
         if (cursor != null) {
+            // The loader hands the same cursor back when the screen is returned to, by
+            // then positioned at its end; rewind it or no rows would be read.
+            cursor.moveToPosition(-1);
             while (cursor.moveToNext()) {
                 final ParticipantData newParticipant = ParticipantData.getFromCursor(cursor);
                 mSelfParticipantMap.put(newParticipant.getId(), newParticipant);
