@@ -40,6 +40,7 @@ import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
@@ -86,6 +87,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     }
 
     private ConversationListFragmentHost mHost;
+    private static final long LIST_MOVE_DURATION_MS = 150;
+
     private RecyclerView mRecyclerView;
     private ExtendedFloatingActionButton mStartNewConversationButton;
     private ListEmptyView mEmptyListMessageView;
@@ -188,6 +191,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        // When a row's content changes, for example an unread preview collapsing to one
+        // line, the default animator cross-fades and shrinks that row first and only then
+        // moves the rows below it, which leaves gaps between the cards for a moment. Update
+        // the row at once and let the others close up quickly instead.
+        final RecyclerView.ItemAnimator animator = mRecyclerView.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+            animator.setMoveDuration(LIST_MOVE_DURATION_MS);
+        }
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int mCurrentState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
