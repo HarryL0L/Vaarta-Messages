@@ -16,6 +16,8 @@
 
 package com.android.messaging.util;
 
+import android.content.pm.PackageManager;
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
@@ -25,7 +27,32 @@ public final class NotificationsUtil {
     public static final String DEFAULT_CHANNEL_ID = "messaging_channel";
     public static final String CONVERSATION_GROUP_NAME = "conversation_group";
 
+    private static final String SETUP_PREFS = "setup";
+    private static final String PREF_ASKED_FOR_NOTIFICATIONS = "asked_for_notifications";
+
     private NotificationsUtil() {
+    }
+
+    /** Whether the app may post notifications. */
+    public static boolean canPostNotifications(Context context) {
+        return context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Whether the user still has to be asked for permission to show notifications. As an
+     * ordinary installed app, unlike a preinstalled one, this app starts without it, and
+     * a messaging app that cannot notify is of little use. It is asked only once.
+     */
+    public static boolean shouldAskForNotifications(Context context) {
+        return !canPostNotifications(context)
+                && !context.getSharedPreferences(SETUP_PREFS, Context.MODE_PRIVATE)
+                        .getBoolean(PREF_ASKED_FOR_NOTIFICATIONS, false);
+    }
+
+    public static void setAskedForNotifications(Context context) {
+        context.getSharedPreferences(SETUP_PREFS, Context.MODE_PRIVATE).edit()
+                .putBoolean(PREF_ASKED_FOR_NOTIFICATIONS, true).apply();
     }
 
     public static void createNotificationChannel(Context context, String id,
@@ -39,6 +66,11 @@ public final class NotificationsUtil {
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         NotificationChannel existing = manager.getNotificationChannel(id);
         if (existing != null) {
+            // The channel is named after the conversation; keep that name up to date.
+            if (title != null && !title.contentEquals(String.valueOf(existing.getName()))) {
+                existing.setName(title);
+                manager.createNotificationChannel(existing);
+            }
             return;
         }
 

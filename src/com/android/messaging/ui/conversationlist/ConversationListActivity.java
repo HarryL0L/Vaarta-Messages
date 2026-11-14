@@ -17,6 +17,8 @@
 
 package com.android.messaging.ui.conversationlist;
 
+import com.android.messaging.util.NotificationsUtil;
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,12 +33,19 @@ import com.android.messaging.ui.search.SearchActivity;
 import com.android.messaging.util.Trace;
 
 public class ConversationListActivity extends AbstractConversationListActivity {
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
         setTheme(R.style.BugleTheme_ConversationListActivity);
         super.onCreate(savedInstanceState);
+        // Covers installs that were set up before the app asked for this.
+        if (!isFinishing() && NotificationsUtil.shouldAskForNotifications(this)) {
+            NotificationsUtil.setAskedForNotifications(this);
+            requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS },
+                    NOTIFICATION_PERMISSION_REQUEST_CODE);
+        }
         mConversationListFragment = ConversationListFragment.createConversationListFragment(null);
         getSupportFragmentManager()
                 .beginTransaction()

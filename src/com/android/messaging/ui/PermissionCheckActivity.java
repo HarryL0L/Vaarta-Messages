@@ -17,6 +17,11 @@
 
 package com.android.messaging.ui;
 
+import com.android.messaging.util.NotificationsUtil;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -85,8 +90,17 @@ public class PermissionCheckActivity extends Activity {
             return;
         }
 
+        // Ask for notifications in the same go. They are not required to use the app, so
+        // they are not part of the missing-permission check above.
+        final List<String> permissions = new ArrayList<>(Arrays.asList(missingPermissions));
+        if (NotificationsUtil.shouldAskForNotifications(this)) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+            NotificationsUtil.setAskedForNotifications(this);
+        }
+
         mRequestTimeMillis = SystemClock.elapsedRealtime();
-        requestPermissions(missingPermissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
+        requestPermissions(permissions.toArray(new String[0]),
+                REQUIRED_PERMISSIONS_REQUEST_CODE);
     }
 
     @Override
