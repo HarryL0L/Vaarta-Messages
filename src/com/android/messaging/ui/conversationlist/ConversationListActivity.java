@@ -50,7 +50,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         mConversationListFragment = ConversationListFragment.createConversationListFragment(null);
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(android.R.id.content, mConversationListFragment)
+                .replace(android.R.id.content, mConversationListFragment)
                 .commit();
         Trace.endSection();
         invalidateActionBar();

@@ -33,7 +33,7 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
                 ConversationListFragment.createArchivedConversationListFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(android.R.id.content, mConversationListFragment)
+                .replace(android.R.id.content, mConversationListFragment)
                 .commit();
         invalidateActionBar();
     }

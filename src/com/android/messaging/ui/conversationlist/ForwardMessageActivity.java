@@ -39,7 +39,8 @@ public class ForwardMessageActivity extends BaseBugleActivity
         super.onCreate(savedInstanceState);
         final ConversationListFragment fragment =
                 ConversationListFragment.createForwardMessageConversationListFragment();
-        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragment)
+                .commit();
         mDraftMessage = getIntent().getParcelableExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA,
                 MessageData.class);
     }
