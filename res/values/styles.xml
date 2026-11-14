@@ -657,12 +657,17 @@
     <style name="AppPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="preferenceStyle">@style/AppPreference</item>
         <item name="preferenceCategoryStyle">@style/AppPreferenceCategory</item>
+        <item name="preferenceScreenStyle">@style/AppPreferenceScreen</item>
         <item name="editTextPreferenceStyle">@style/AppEditTextPreference</item>
         <item name="switchPreferenceCompatStyle">@style/AppSwitchPreference</item>
     </style>
 
     <!-- None of the settings have icons, so do not indent them to leave room for one. -->
     <style name="AppPreference" parent="@style/Preference.Material">
+        <item name="iconSpaceReserved">false</item>
+    </style>
+
+    <style name="AppPreferenceScreen" parent="@style/Preference.PreferenceScreen.Material">
         <item name="iconSpaceReserved">false</item>
     </style>
 
