@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -32,6 +33,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.android.messaging.R;
+import com.android.messaging.util.RcsBusinessSender;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.LogUtil;
@@ -44,6 +46,8 @@ import java.util.List;
 
 public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
     private static final float SCALING_FACTOR = 1.33f;
+    // Backgrounds brighter than this get a dark letter
+    private static final float LIGHT_BACKGROUND_LUMINANCE = 0.6f;
 
     private final TypedArray mColors;
 
@@ -113,7 +117,15 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
                 final String name = AvatarUriUtil.getName(generatedUri);
                 bitmap = renderLetterTile(name, width, height);
             } else {
-                bitmap = renderDefaultAvatar(width, height);
+                // A business that sent over RCS gets its initial instead of the generic
+                // person icon; see RcsBusinessSender.
+                final String businessName = RcsBusinessSender.decodeName(
+                        AvatarUriUtil.getIdentifier(mDescriptor.uri));
+                if (businessName != null && Character.isLetterOrDigit(businessName.charAt(0))) {
+                    bitmap = renderLetterTile(businessName, width, height);
+                } else {
+                    bitmap = renderDefaultAvatar(width, height);
+                }
             }
         }
         return new DecodedImageResource(getKey(), bitmap, orientation);
@@ -139,12 +151,16 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         final float halfWidth = width / 2;
         final float halfHeight = height / 2;
         final int minOfWidthAndHeight = Math.min(width, height);
+        final int backgroundColor =
+                getBackgroundColor(AvatarUriUtil.getIdentifier(mDescriptor.uri));
         final Bitmap bitmap = getBitmapPool().createOrReuseBitmap(width, height,
-                getBackgroundColor(AvatarUriUtil.getIdentifier(mDescriptor.uri)));
+                backgroundColor);
         final Resources resources = mContext.getResources();
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-        paint.setColor(resources.getColor(R.color.letter_tile_font_color));
+        // A brand colour can be light, where the usual white letter would vanish.
+        paint.setColor(Color.luminance(backgroundColor) > LIGHT_BACKGROUND_LUMINANCE
+                ? Color.BLACK : resources.getColor(R.color.letter_tile_font_color));
         final float letterToTileRatio = resources.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
         paint.setTextSize(letterToTileRatio * minOfWidthAndHeight);
 
@@ -161,6 +177,11 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
     }
 
     private int getBackgroundColor(final String identifier) {
+        // A business that sent over RCS brings its own brand colour.
+        final Integer brandColor = RcsBusinessSender.decodeColor(identifier);
+        if (brandColor != null) {
+            return brandColor;
+        }
         if (!TextUtils.isEmpty(identifier) &&
                 mContext.getResources().getBoolean(R.bool.contact_colors)) {
             int idcolor = Math.abs(identifier.hashCode()) % mColors.length();

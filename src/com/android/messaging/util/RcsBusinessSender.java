@@ -31,6 +31,8 @@ public final class RcsBusinessSender {
     private static final Pattern AGENT_ID_PATTERN =
             Pattern.compile("[a-z][a-z0-9]*(_[a-z0-9]*)+(@[a-z0-9.-]*)?");
 
+    private static final Pattern COLOR_PATTERN = Pattern.compile("#[0-9a-fA-F]{6}");
+
     private RcsBusinessSender() {
     }
 
@@ -45,6 +47,39 @@ public final class RcsBusinessSender {
 
     /** Returns the business name, or null if {@code sender} is not an encoded sender. */
     public static String decodeName(final String sender) {
+        final String[] fields = decodeFields(sender);
+        if (fields == null) {
+            return null;
+        }
+        if (fields.length > 1 && !fields[1].trim().isEmpty()) {
+            // The business's own display name
+            return fields[1].trim();
+        }
+        return nameFromAgentId(fields[0]);
+    }
+
+    /**
+     * Returns the business's brand colour as an opaque ARGB value, or null if
+     * {@code sender} is not an encoded sender or carries no usable colour.
+     */
+    public static Integer decodeColor(final String sender) {
+        final String[] fields = decodeFields(sender);
+        if (fields == null || fields.length < 3) {
+            return null;
+        }
+        final String color = fields[2].trim();
+        if (!COLOR_PATTERN.matcher(color).matches()) {
+            return null;
+        }
+        return 0xFF000000 | Integer.parseInt(color.substring(1), 16);
+    }
+
+    /**
+     * Splits an encoded sender into its fields: agent ID, display name, brand colour. The
+     * agent ID is always present; the others may be missing. Returns null if
+     * {@code sender} is not an encoded sender.
+     */
+    private static String[] decodeFields(final String sender) {
         if (sender == null || sender.length() < MIN_ENCODED_LENGTH) {
             return null;
         }
@@ -64,17 +99,13 @@ public final class RcsBusinessSender {
         }
 
         final String[] fields = decoded.split(FIELD_SEPARATOR, -1);
-        final String agentId = fields[0].replace(ENCODED_AT, "@");
+        fields[0] = fields[0].replace(ENCODED_AT, "@");
         // Random text almost never decodes to readable text shaped like an agent ID, so
         // this check is what tells an encoded sender from an ordinary one.
-        if (!AGENT_ID_PATTERN.matcher(agentId).matches()) {
+        if (!AGENT_ID_PATTERN.matcher(fields[0]).matches()) {
             return null;
         }
-        if (fields.length > 1 && !fields[1].trim().isEmpty()) {
-            // The business's own display name
-            return fields[1].trim();
-        }
-        return nameFromAgentId(agentId);
+        return fields;
     }
 
     /** Rebuilds a name from an agent ID when the sender carries no display name. */
