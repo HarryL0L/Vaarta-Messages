@@ -98,6 +98,7 @@ import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageV
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.mediapicker.MediaPicker;
+import com.android.messaging.util.RcsBusinessSender;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -1181,6 +1182,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private static boolean canReplyTo(final ParticipantData participant) {
+        // A leftover copy of an RCS business message; its sender looks like an e-mail
+        // address but nothing can be sent to it.
+        if (RcsBusinessSender.decodeName(participant.getSendDestination()) != null) {
+            return false;
+        }
         if (participant.isEmail()) {
             return true;
         }

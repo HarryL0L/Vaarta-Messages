@@ -13,25 +13,29 @@ import java.util.regex.Pattern;
  * Makes the senders of RCS business messages readable.
  *
  * This app does not speak RCS, but an RCS client on the same phone may leave copies of
- * business messages in the shared SMS/MMS store. Their sender is the business's agent ID,
- * for example {@code union_bank_of_india_vusd3moo_agent@rbm.goog}, written in base32
- * ({@code ovxgs33ol5rgc3tll5xwmx3jnzsgsyk7oz2xgzbtnvxw6x3...}). This turns such a sender
- * back into a name like "Union Bank Of India".
+ * business messages in the shared SMS/MMS store. Their sender looks like
+ * {@code ovxgs33ol5rgc3tll5xw...@bot.rcs.google.com}. The part before the "@" is base32 for
+ * three fields joined by "_;_": the business's agent ID, its display name and its brand
+ * colour, for example
+ * {@code union_bank_of_india_vusd3moo_agent__AT__rbm.goog_;_Union Bank Of India_;_#DA251C}.
+ * This class turns such a sender back into the display name.
  */
 public final class RcsBusinessSender {
-    // name_with_underscores, optionally followed by all or part of "@domain"
-    private static final Pattern AGENT_ID_PATTERN =
-            Pattern.compile("[a-z][a-z0-9]*(_[a-z0-9]*)+(@[a-z0-9.-]*)?");
+    private static final String FIELD_SEPARATOR = "_;_";
+    private static final String ENCODED_AT = "__AT__";
     private static final String AGENT_SUFFIX = "_agent";
     // Long enough that ordinary sender names and numbers are never considered
     private static final int MIN_ENCODED_LENGTH = 24;
     private static final int RANDOM_TOKEN_LENGTH = 8;
+    // name_with_underscores, optionally followed by all or part of "@domain"
+    private static final Pattern AGENT_ID_PATTERN =
+            Pattern.compile("[a-z][a-z0-9]*(_[a-z0-9]*)+(@[a-z0-9.-]*)?");
 
     private RcsBusinessSender() {
     }
 
     /**
-     * Returns a readable name if {@code sender} is an encoded RCS business agent ID, and
+     * Returns a readable name if {@code sender} is an encoded RCS business sender, and
      * {@code sender} itself otherwise.
      */
     public static String displayName(final String sender) {
@@ -39,13 +43,13 @@ public final class RcsBusinessSender {
         return name != null ? name : sender;
     }
 
-    /** Returns the business name, or null if {@code sender} is not an encoded agent ID. */
+    /** Returns the business name, or null if {@code sender} is not an encoded sender. */
     public static String decodeName(final String sender) {
         if (sender == null || sender.length() < MIN_ENCODED_LENGTH) {
             return null;
         }
-        // Only the leading run of base32 characters is the encoded ID; the stored sender
-        // may carry something after it, such as padding or an "@domain" of its own.
+        // Only the leading run of base32 characters is encoded; "@bot.rcs.google.com" or
+        // padding may follow it.
         final String lower = sender.trim().toLowerCase(Locale.ROOT);
         int encodedLength = 0;
         while (encodedLength < lower.length() && isBase32(lower.charAt(encodedLength))) {
@@ -54,13 +58,27 @@ public final class RcsBusinessSender {
         if (encodedLength < MIN_ENCODED_LENGTH) {
             return null;
         }
-        final String agentId = decodeBase32(lower.substring(0, encodedLength));
-        // Random text almost never decodes to readable ASCII, so decoding cleanly to
-        // something shaped like an agent ID is a reliable sign on its own. The stored ID is
-        // not always complete, so do not insist on the "@rbm.goog" ending.
-        if (agentId == null || !AGENT_ID_PATTERN.matcher(agentId).matches()) {
+        final String decoded = decodeBase32(lower.substring(0, encodedLength));
+        if (decoded == null) {
             return null;
         }
+
+        final String[] fields = decoded.split(FIELD_SEPARATOR, -1);
+        final String agentId = fields[0].replace(ENCODED_AT, "@");
+        // Random text almost never decodes to readable text shaped like an agent ID, so
+        // this check is what tells an encoded sender from an ordinary one.
+        if (!AGENT_ID_PATTERN.matcher(agentId).matches()) {
+            return null;
+        }
+        if (fields.length > 1 && !fields[1].trim().isEmpty()) {
+            // The business's own display name
+            return fields[1].trim();
+        }
+        return nameFromAgentId(agentId);
+    }
+
+    /** Rebuilds a name from an agent ID when the sender carries no display name. */
+    private static String nameFromAgentId(final String agentId) {
         String name = agentId;
         final int at = name.indexOf('@');
         if (at >= 0) {
@@ -98,40 +116,35 @@ public final class RcsBusinessSender {
         return pretty.length() > 0 ? pretty.toString() : null;
     }
 
-    /**
-     * Decodes lower-case, unpadded base32. Returns null unless the input is valid base32
-     * that decodes to plain printable ASCII.
-     */
     private static boolean isBase32(final char c) {
         return (c >= 'a' && c <= 'z') || (c >= '2' && c <= '7');
     }
 
+    /**
+     * Decodes lower-case, unpadded base32. Returns null unless the result is readable
+     * text: valid UTF-8 without control characters.
+     */
     private static String decodeBase32(final String encoded) {
-        final byte[] decoded = new byte[encoded.length() * 5 / 8];
+        final byte[] bytes = new byte[encoded.length() * 5 / 8];
         int buffer = 0;
         int bits = 0;
         int count = 0;
         for (int i = 0; i < encoded.length(); i++) {
             final char c = encoded.charAt(i);
-            final int value;
-            if (c >= 'a' && c <= 'z') {
-                value = c - 'a';
-            } else if (c >= '2' && c <= '7') {
-                value = c - '2' + 26;
-            } else {
-                return null;
-            }
+            final int value = c >= 'a' ? c - 'a' : c - '2' + 26;
             buffer = (buffer << 5) | value;
             bits += 5;
             if (bits >= 8) {
                 bits -= 8;
                 final int b = (buffer >> bits) & 0xFF;
-                if (b < 0x20 || b > 0x7E) {
+                if (b < 0x20 || b == 0x7F) {
                     return null;
                 }
-                decoded[count++] = (byte) b;
+                bytes[count++] = (byte) b;
             }
         }
-        return new String(decoded, 0, count, StandardCharsets.US_ASCII);
+        final String text = new String(bytes, 0, count, StandardCharsets.UTF_8);
+        // Invalid UTF-8 decodes to the replacement character
+        return text.indexOf('�') >= 0 ? null : text;
     }
 }
