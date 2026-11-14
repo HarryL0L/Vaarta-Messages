@@ -13,6 +13,9 @@
          a bank or carrier name, that replies cannot be sent to. -->
     <string name="cant_reply_to_sender">You can\'t reply to this sender</string>
 
+    <!-- Conversation list menu -->
+    <string name="action_mark_all_read">Mark all as read</string>
+
     <!-- Search -->
     <string name="search_messages">Search messages</string>
     <string name="search_no_results">No messages found</string>

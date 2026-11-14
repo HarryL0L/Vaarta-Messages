@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2025 The LineageOS Project
+    SPDX-License-Identifier: Apache-2.0
+-->
+<!-- Pop-up and overflow menus: a generously rounded tonal surface -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/m3_surface_container_high" />
+    <corners android:radius="20dp" />
+    <padding android:top="8dp" android:bottom="8dp" />
+</shape>

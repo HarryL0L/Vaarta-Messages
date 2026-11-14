@@ -17,6 +17,9 @@
 
 package com.android.messaging.datamodel.action;
 
+import java.util.List;
+import java.util.ArrayList;
+import android.database.Cursor;
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -47,6 +50,26 @@ public class MarkAsReadAction extends Action implements Parcelable {
     public static void markAsRead(final String conversationId) {
         final MarkAsReadAction action = new MarkAsReadAction(conversationId);
         action.start();
+    }
+
+    /**
+     * Mark the messages of every conversation that has unread ones as read. Must not be
+     * called on the main thread.
+     */
+    public static void markAllAsRead() {
+        final DatabaseWrapper db = DataModel.get().getDatabase();
+        final List<String> conversationIds = new ArrayList<>();
+        try (Cursor cursor = db.rawQuery("SELECT DISTINCT " + MessageColumns.CONVERSATION_ID
+                + " FROM " + DatabaseHelper.MESSAGES_TABLE
+                + " WHERE " + MessageColumns.READ + " = 0 OR " + MessageColumns.SEEN + " = 0",
+                null)) {
+            while (cursor != null && cursor.moveToNext()) {
+                conversationIds.add(cursor.getString(0));
+            }
+        }
+        for (final String conversationId : conversationIds) {
+            markAsRead(conversationId);
+        }
     }
 
     private MarkAsReadAction(final String conversationId) {
