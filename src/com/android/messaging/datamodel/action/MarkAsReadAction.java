@@ -53,23 +53,12 @@ public class MarkAsReadAction extends Action implements Parcelable {
     }
 
     /**
-     * Mark the messages of every conversation that has unread ones as read. Must not be
-     * called on the main thread.
+     * Mark the messages of every conversation as read, in one step so that the
+     * conversation list refreshes once rather than once per conversation.
      */
     public static void markAllAsRead() {
-        final DatabaseWrapper db = DataModel.get().getDatabase();
-        final List<String> conversationIds = new ArrayList<>();
-        try (Cursor cursor = db.rawQuery("SELECT DISTINCT " + MessageColumns.CONVERSATION_ID
-                + " FROM " + DatabaseHelper.MESSAGES_TABLE
-                + " WHERE " + MessageColumns.READ + " = 0 OR " + MessageColumns.SEEN + " = 0",
-                null)) {
-            while (cursor != null && cursor.moveToNext()) {
-                conversationIds.add(cursor.getString(0));
-            }
-        }
-        for (final String conversationId : conversationIds) {
-            markAsRead(conversationId);
-        }
+        final MarkAsReadAction action = new MarkAsReadAction((String) null);
+        action.start();
     }
 
     private MarkAsReadAction(final String conversationId) {
@@ -82,6 +71,11 @@ public class MarkAsReadAction extends Action implements Parcelable {
 
         // TODO: Consider doing this in background service to avoid delaying other actions
         final DatabaseWrapper db = DataModel.get().getDatabase();
+
+        if (conversationId == null) {
+            markAllAsRead(db);
+            return null;
+        }
 
         // Mark all messages in thread as read in telephony
         final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
@@ -113,6 +107,44 @@ public class MarkAsReadAction extends Action implements Parcelable {
         // clear the now stale notifications.
         BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
         return null;
+    }
+
+    private static void markAllAsRead(final DatabaseWrapper db) {
+        final String unread = MessageColumns.READ + " !=1 OR " + MessageColumns.SEEN + " !=1";
+
+        final List<String> conversationIds = new ArrayList<>();
+        try (Cursor cursor = db.rawQuery("SELECT DISTINCT " + MessageColumns.CONVERSATION_ID
+                + " FROM " + DatabaseHelper.MESSAGES_TABLE + " WHERE " + unread, null)) {
+            while (cursor != null && cursor.moveToNext()) {
+                conversationIds.add(cursor.getString(0));
+            }
+        }
+        if (conversationIds.isEmpty()) {
+            return;
+        }
+
+        // Mark the messages as read in telephony
+        for (final String conversationId : conversationIds) {
+            final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
+            if (threadId != -1) {
+                MmsUtils.updateSmsReadStatus(threadId, Long.MAX_VALUE);
+            }
+        }
+
+        // Update local db in a single transaction
+        db.beginTransaction();
+        try {
+            final ContentValues values = new ContentValues();
+            values.put(MessageColumns.READ, 1);
+            values.put(MessageColumns.SEEN, 1);
+            db.update(DatabaseHelper.MESSAGES_TABLE, values, unread, null);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        MessagingContentProvider.notifyEverythingChanged();
+
+        BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
     }
 
     private MarkAsReadAction(final Parcel in) {

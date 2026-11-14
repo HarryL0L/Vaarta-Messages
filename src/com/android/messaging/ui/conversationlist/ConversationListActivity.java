@@ -101,8 +101,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
             startActivity(new Intent(this, SearchActivity.class));
             return true;
         } else if (itemId == R.id.action_mark_all_read) {
-            // Reads the message database, so keep it off the main thread.
-            new Thread(MarkAsReadAction::markAllAsRead, "mark-all-read").start();
+            MarkAsReadAction.markAllAsRead();
             return true;
         } else if (itemId == R.id.action_start_new_conversation) {
             onActionBarStartNewConversation();
