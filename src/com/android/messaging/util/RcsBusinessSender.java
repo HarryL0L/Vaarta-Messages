@@ -44,9 +44,17 @@ public final class RcsBusinessSender {
         if (sender == null || sender.length() < MIN_ENCODED_LENGTH) {
             return null;
         }
-        // Tolerate upper case and "=" padding
-        final String agentId = decodeBase32(
-                sender.toLowerCase(Locale.ROOT).replace("=", ""));
+        // Only the leading run of base32 characters is the encoded ID; the stored sender
+        // may carry something after it, such as padding or an "@domain" of its own.
+        final String lower = sender.trim().toLowerCase(Locale.ROOT);
+        int encodedLength = 0;
+        while (encodedLength < lower.length() && isBase32(lower.charAt(encodedLength))) {
+            encodedLength++;
+        }
+        if (encodedLength < MIN_ENCODED_LENGTH) {
+            return null;
+        }
+        final String agentId = decodeBase32(lower.substring(0, encodedLength));
         // Random text almost never decodes to readable ASCII, so decoding cleanly to
         // something shaped like an agent ID is a reliable sign on its own. The stored ID is
         // not always complete, so do not insist on the "@rbm.goog" ending.
@@ -94,6 +102,10 @@ public final class RcsBusinessSender {
      * Decodes lower-case, unpadded base32. Returns null unless the input is valid base32
      * that decodes to plain printable ASCII.
      */
+    private static boolean isBase32(final char c) {
+        return (c >= 'a' && c <= 'z') || (c >= '2' && c <= '7');
+    }
+
     private static String decodeBase32(final String encoded) {
         final byte[] decoded = new byte[encoded.length() * 5 / 8];
         int buffer = 0;
