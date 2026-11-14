@@ -28,6 +28,7 @@ import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
+import com.android.messaging.util.RcsBusinessSender;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.Dates;
@@ -76,7 +77,7 @@ public class ConversationListItemData {
 
     public void bind(final Cursor cursor, final boolean ignoreDraft) {
         mConversationId = cursor.getString(INDEX_ID);
-        mName = cursor.getString(INDEX_CONVERSATION_NAME);
+        mName = RcsBusinessSender.displayName(cursor.getString(INDEX_CONVERSATION_NAME));
         mIcon = cursor.getString(INDEX_CONVERSATION_ICON);
         mSnippetText = cursor.getString(INDEX_SNIPPET_TEXT);
         mTimestamp = cursor.getLong(INDEX_SORT_TIMESTAMP);

@@ -36,6 +36,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.util.RcsBusinessSender;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextUtil;
@@ -329,7 +330,7 @@ public class ParticipantData implements Parcelable {
     }
 
     public String getDisplayDestination() {
-        return mDisplayDestination;
+        return RcsBusinessSender.displayName(mDisplayDestination);
     }
 
     public String getContactDestination() {
@@ -365,7 +366,7 @@ public class ParticipantData implements Parcelable {
 
         // Fallback to the display destination
         if (!TextUtils.isEmpty(mDisplayDestination)) {
-            return mDisplayDestination;
+            return RcsBusinessSender.displayName(mDisplayDestination);
         }
 
         return Factory.get().getApplicationContext().getResources().getString(

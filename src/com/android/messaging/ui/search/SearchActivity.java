@@ -36,6 +36,7 @@ import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseHelper.PartColumns;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Dates;
+import com.android.messaging.util.RcsBusinessSender;
 import com.android.messaging.util.UiUtils;
 
 import java.util.ArrayList;
@@ -188,7 +189,7 @@ public class SearchActivity extends AppCompatActivity {
         Result(final String conversationId, final String name, final String text,
                 final long timestamp) {
             this.conversationId = conversationId;
-            this.name = name == null ? "" : name;
+            this.name = name == null ? "" : RcsBusinessSender.displayName(name);
             this.text = text == null ? "" : text;
             this.timestamp = timestamp;
         }
