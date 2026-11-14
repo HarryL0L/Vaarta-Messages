@@ -5,10 +5,9 @@
 
 package com.android.messaging.util;
 
-import android.text.TextUtils;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Makes the senders of RCS business messages readable.
@@ -20,10 +19,12 @@ import java.util.Locale;
  * back into a name like "Union Bank Of India".
  */
 public final class RcsBusinessSender {
-    private static final String AGENT_DOMAIN = "@rbm.goog";
+    // name_with_underscores, optionally followed by all or part of "@domain"
+    private static final Pattern AGENT_ID_PATTERN =
+            Pattern.compile("[a-z][a-z0-9]*(_[a-z0-9]*)+(@[a-z0-9.-]*)?");
     private static final String AGENT_SUFFIX = "_agent";
-    // Shortest base32 text that could hold "x_agent@rbm.goog"
-    private static final int MIN_ENCODED_LENGTH = 26;
+    // Long enough that ordinary sender names and numbers are never considered
+    private static final int MIN_ENCODED_LENGTH = 24;
     private static final int RANDOM_TOKEN_LENGTH = 8;
 
     private RcsBusinessSender() {
@@ -46,24 +47,38 @@ public final class RcsBusinessSender {
         // Tolerate upper case and "=" padding
         final String agentId = decodeBase32(
                 sender.toLowerCase(Locale.ROOT).replace("=", ""));
-        if (agentId == null || !agentId.endsWith(AGENT_DOMAIN)) {
+        // Random text almost never decodes to readable ASCII, so decoding cleanly to
+        // something shaped like an agent ID is a reliable sign on its own. The stored ID is
+        // not always complete, so do not insist on the "@rbm.goog" ending.
+        if (agentId == null || !AGENT_ID_PATTERN.matcher(agentId).matches()) {
             return null;
         }
-        String name = agentId.substring(0, agentId.length() - AGENT_DOMAIN.length());
+        String name = agentId;
+        final int at = name.indexOf('@');
+        if (at >= 0) {
+            name = name.substring(0, at);
+        }
         if (name.endsWith(AGENT_SUFFIX)) {
             name = name.substring(0, name.length() - AGENT_SUFFIX.length());
+        } else {
+            // A cut-off ID may end in part of the word "agent"
+            final int lastSeparator = name.lastIndexOf('_');
+            if (lastSeparator >= 0
+                    && AGENT_SUFFIX.startsWith(name.substring(lastSeparator))) {
+                name = name.substring(0, lastSeparator);
+            }
         }
         // Drop the random token that makes the ID unique: "..._vusd3moo"
         final int lastSeparator = name.lastIndexOf('_');
-        if (lastSeparator > 0 && name.length() - lastSeparator - 1 == RANDOM_TOKEN_LENGTH) {
-            name = name.substring(0, lastSeparator);
-        }
-        if (TextUtils.isEmpty(name)) {
-            return null;
+        if (lastSeparator > 0) {
+            final String last = name.substring(lastSeparator + 1);
+            if (last.length() <= RANDOM_TOKEN_LENGTH && last.matches(".*[0-9].*")) {
+                name = name.substring(0, lastSeparator);
+            }
         }
 
         final StringBuilder pretty = new StringBuilder(name.length());
-        for (final String word : name.split("_")) {
+        for (final String word : name.split("[_.-]+")) {
             if (word.isEmpty()) {
                 continue;
             }

@@ -10,6 +10,16 @@ plugins {
 // ever lives in the repository. Without them, release builds are left unsigned.
 def releaseKeystore = System.getenv('VAARTA_KEYSTORE_FILE')
 
+def gitCommit = 'dev'
+try {
+    gitCommit = providers.exec {
+        commandLine 'git', 'rev-parse', '--short=7', 'HEAD'
+        ignoreExitValue = true
+    }.standardOutput.asText.get().trim() ?: 'dev'
+} catch (Exception ignored) {
+    // Not a git checkout; keep the placeholder.
+}
+
 android {
     // The package the code and its R class live in. Unchanged from upstream so
     // that merging LineageOS updates stays painless.
@@ -23,7 +33,9 @@ android {
         minSdk = 33
         targetSdk = 34
         versionCode = 10001040
-        versionName = '1.0.001'
+        // The commit is part of the version so an installed build can be identified
+        // under Settings > Apps > Vaarta Messages.
+        versionName = "1.0.001-${gitCommit}"
 
         externalNativeBuild {
             cmake {
