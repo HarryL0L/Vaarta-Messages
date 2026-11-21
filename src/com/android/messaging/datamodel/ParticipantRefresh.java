@@ -361,8 +361,10 @@ public class ParticipantRefresh {
             // For subscriptions already in the database, refresh ParticipantColumns.SIM_SLOT_ID.
             for (final Integer subId : activeSubscriptionIdToRecordMap.keySet()) {
                 final SubscriptionInfo record = activeSubscriptionIdToRecordMap.get(subId);
-                final String displayName =
-                        DatabaseUtils.sqlEscapeString(record.getDisplayName().toString());
+                // A SIM can come without a display name, for example on a fresh device.
+                final CharSequence rawDisplayName = record.getDisplayName();
+                final String displayName = DatabaseUtils.sqlEscapeString(
+                        rawDisplayName == null ? "" : rawDisplayName.toString());
                 db.execSQL(getUpdateSelfParticipantSubscriptionInfoSql(record.getSimSlotIndex(),
                         record.getIconTint(), displayName,
                         ParticipantColumns.SUB_ID + " = " + subId));
